@@ -1,7 +1,8 @@
 ﻿let prodOfNum n =
+    let absN = abs n
     let rec prodNum num res =
         if num < 1 then res else prodNum (num / 10) (res * (num % 10))
-    prodNum (abs n / 10) ((abs n) % 10)
+    prodNum (absN / 10) (absN % 10)
 
 let findNum num list =
     let rec findNumRec num numInList list =
@@ -11,7 +12,7 @@ let findNum num list =
         | _ -> findNumRec num (numInList + 1) (List.tail list)
     findNumRec num 1 list
 
-let isPolindrom str =
+let isPalindrome str =
     let rec isPolindromRec (str : string) left right =
         match (left, right) with
         | (a, b) when a >= b -> true
@@ -23,21 +24,21 @@ let mergeSort list =
     let rec unionOfSortList list1 list2 res =
         match (list1, list2) with
         | ([], []) -> List.rev res
-        | ([], _) -> unionOfSortList list1 (List.tail list2) ((List.head list2)::res)
-        | (_, []) -> unionOfSortList (List.tail list1) list2 ((List.head list1)::res)
-        | (_, _) when (List.head list1) < (List.head list2) -> unionOfSortList (List.tail list1) list2 ((List.head list1)::res)
-        | (_, _) -> unionOfSortList list1 (List.tail list2) ((List.head list2)::res)
+        | ([], h::t) -> unionOfSortList list1 t (h::res)
+        | (h::t, []) -> unionOfSortList t list2 (h::res)
+        | (h1::t1, h2::t2) when h1 < h2 -> unionOfSortList t1 list2 (h1::res)
+        | (h1::t1, h2::t2) -> unionOfSortList list1 t2 (h2::res)
     
     let rec mergeSortRec list1 list2 =
         let l1 = List.length list1
         let l2 = List.length list2
-        match (l1, l2) with
-        | (a, b) when a < 1 || b < 1 -> list1 @ list2
-        | (a, b) when a = 1 && b = 1 -> unionOfSortList list1 list2 []
-        | (a, b) when a = 1 && b > 1 -> unionOfSortList list1 (mergeSortRec list2.[0..(l2 / 2) - 1] list2.[l2 / 2..(l2 - 1)]) []
-        | (a, b) when a > 1 && b = 1 -> unionOfSortList (mergeSortRec list1.[0..(l1 / 2) - 1] list1.[l1 / 2..(l1 - 1)]) list2 []
+        match (list1, list2) with
+        | ([], []) -> list1 @ list2
+        | ([a], [b]) -> unionOfSortList list1 list2 []
+        | ([a], _) -> unionOfSortList list1 (mergeSortRec list2.[0..(l2 / 2) - 1] list2.[l2 / 2..(l2 - 1)]) []
+        | (_, [b]) -> unionOfSortList (mergeSortRec list1.[0..(l1 / 2) - 1] list1.[l1 / 2..(l1 - 1)]) list2 []
         | (_, _) -> unionOfSortList (mergeSortRec list1.[0..(l1 / 2) - 1] list1.[l1 / 2..(l1 - 1)]) (mergeSortRec list2.[0..(l2 / 2) - 1] list2.[l2 / 2..(l2 - 1)]) []
-
+    
     let len = List.length list
 
     if len < 2
@@ -53,11 +54,11 @@ let main argv =
     let res4 = mergeSort [14; 5; 3]
     let res5 = mergeSort [6; 5; 4; 3; 2; 1]
 
-    let res6 = isPolindrom "a"
-    let res7 = isPolindrom ""
-    let res8 = isPolindrom "abba"
-    let res9 = isPolindrom "abcd"
-    let res10 = isPolindrom "arrrerrra"
+    let res6 = isPalindrome "a"
+    let res7 = isPalindrome ""
+    let res8 = isPalindrome "abba"
+    let res9 = isPalindrome "abcd"
+    let res10 = isPalindrome "arrrerrra"
 
     let res11 = findNum 4 [1; 2; 3; 4; 5]
     let res12 = findNum 2 [1; 1]
